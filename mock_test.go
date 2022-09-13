@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v9"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -285,7 +285,7 @@ func operationScanCmd(base baseMock, expected func() *ExpectedScan, actual func(
 	Expect(cursor).To(Equal(uint64(5)))
 }
 
-func operationStringStringMapCmd(base baseMock, expected func() *ExpectedStringStringMap, actual func() *redis.StringStringMapCmd) {
+func operationStringStringMapCmd(base baseMock, expected func() *ExpectedStringStringMap, actual func() *redis.MapStringStringCmd) {
 	var (
 		setErr = errors.New("string string map cmd error")
 		val    map[string]string

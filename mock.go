@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v9"
 )
 
 type mock struct {
@@ -725,7 +725,7 @@ func (m *mock) ExpectSet(key string, value interface{}, expiration time.Duration
 
 func (m *mock) ExpectSetEX(key string, value interface{}, expiration time.Duration) *ExpectedStatus {
 	e := &ExpectedStatus{}
-	e.cmd = m.factory.SetEX(m.ctx, key, value, expiration)
+	e.cmd = m.factory.SetEx(m.ctx, key, value, expiration)
 	m.pushExpect(e)
 	return e
 }
@@ -1346,16 +1346,16 @@ func (m *mock) ExpectXClaimJustID(a *redis.XClaimArgs) *ExpectedStringSlice {
 	return e
 }
 
-func (m *mock) ExpectXTrim(key string, maxLen int64) *ExpectedInt {
+func (m *mock) ExpectXTrimMaxLen(key string, maxLen int64) *ExpectedInt {
 	e := &ExpectedInt{}
-	e.cmd = m.factory.XTrim(m.ctx, key, maxLen)
+	e.cmd = m.factory.XTrimMaxLen(m.ctx, key, maxLen)
 	m.pushExpect(e)
 	return e
 }
 
-func (m *mock) ExpectXTrimApprox(key string, maxLen int64) *ExpectedInt {
+func (m *mock) ExpectXTrimMaxLenApprox(key string, maxLen int64, limit int64) *ExpectedInt {
 	e := &ExpectedInt{}
-	e.cmd = m.factory.XTrimApprox(m.ctx, key, maxLen)
+	e.cmd = m.factory.XTrimMaxLenApprox(m.ctx, key, maxLen, limit)
 	m.pushExpect(e)
 	return e
 }
@@ -1388,65 +1388,23 @@ func (m *mock) ExpectBZPopMin(timeout time.Duration, keys ...string) *ExpectedZW
 	return e
 }
 
-func (m *mock) ExpectZAdd(key string, members ...*redis.Z) *ExpectedInt {
+func (m *mock) ExpectZAdd(key string, members ...redis.Z) *ExpectedInt {
 	e := &ExpectedInt{}
 	e.cmd = m.factory.ZAdd(m.ctx, key, members...)
 	m.pushExpect(e)
 	return e
 }
 
-func (m *mock) ExpectZAddNX(key string, members ...*redis.Z) *ExpectedInt {
+func (m *mock) ExpectZAddNX(key string, members ...redis.Z) *ExpectedInt {
 	e := &ExpectedInt{}
 	e.cmd = m.factory.ZAddNX(m.ctx, key, members...)
 	m.pushExpect(e)
 	return e
 }
 
-func (m *mock) ExpectZAddXX(key string, members ...*redis.Z) *ExpectedInt {
+func (m *mock) ExpectZAddXX(key string, members ...redis.Z) *ExpectedInt {
 	e := &ExpectedInt{}
 	e.cmd = m.factory.ZAddXX(m.ctx, key, members...)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZAddCh(key string, members ...*redis.Z) *ExpectedInt {
-	e := &ExpectedInt{}
-	e.cmd = m.factory.ZAddCh(m.ctx, key, members...)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZAddNXCh(key string, members ...*redis.Z) *ExpectedInt {
-	e := &ExpectedInt{}
-	e.cmd = m.factory.ZAddNXCh(m.ctx, key, members...)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZAddXXCh(key string, members ...*redis.Z) *ExpectedInt {
-	e := &ExpectedInt{}
-	e.cmd = m.factory.ZAddXXCh(m.ctx, key, members...)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZIncr(key string, member *redis.Z) *ExpectedFloat {
-	e := &ExpectedFloat{}
-	e.cmd = m.factory.ZIncr(m.ctx, key, member)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZIncrNX(key string, member *redis.Z) *ExpectedFloat {
-	e := &ExpectedFloat{}
-	e.cmd = m.factory.ZIncrNX(m.ctx, key, member)
-	m.pushExpect(e)
-	return e
-}
-
-func (m *mock) ExpectZIncrXX(key string, member *redis.Z) *ExpectedFloat {
-	e := &ExpectedFloat{}
-	e.cmd = m.factory.ZIncrXX(m.ctx, key, member)
 	m.pushExpect(e)
 	return e
 }
